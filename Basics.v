@@ -132,7 +132,7 @@ Example test_next_weekday:
     later.  Having made the assertion, we can also ask Coq to verify
     it, like this: *)
 
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 
 (** The details are not important for now (we'll come back to
     them in a bit), but essentially this can be read as "The assertion
@@ -217,13 +217,13 @@ Definition orb (b1:bool) (b2:bool) : bool :=
     table -- for the [orb] function: *)
 
 Example test_orb1:  (orb true  false) = true.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 Example test_orb2:  (orb false false) = false.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 Example test_orb3:  (orb false true)  = true.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 Example test_orb4:  (orb true  true)  = true.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 
 (** We can also introduce some familiar syntax for the boolean
     operations we have just defined. The [Infix] command defines a new
@@ -233,7 +233,7 @@ Notation "x && y" := (andb x y).
 Notation "x || y" := (orb x y).
 
 Example test_orb5:  false || false || true = true.
-Proof. simpl. reflexivity. Qed.
+Proof. compute. reflexivity. Qed.
 
 (** _A note on notation_: In [.v] files, we use square brackets
     to delimit fragments of Coq code within comments; this convention,
@@ -258,13 +258,13 @@ Definition nandb (b1:bool) (b2:bool) : bool :=
   (negb (andb b1 b2)).
 
 Example test_nandb1:               (nandb true false) = true.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 Example test_nandb2:               (nandb false false) = true.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 Example test_nandb3:               (nandb false true) = true.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 Example test_nandb4:               (nandb true true) = false.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 (** [] *)
 
 (** **** Exercise: 1 star (andb3)  *)
@@ -276,13 +276,13 @@ Definition andb3 (b1:bool) (b2:bool) (b3:bool) : bool :=
   (b1 && b2 && b3).
 
 Example test_andb31:                 (andb3 true true true) = true.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 Example test_andb32:                 (andb3 false true true) = false.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 Example test_andb33:                 (andb3 true false true) = false.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 Example test_andb34:                 (andb3 true true false) = false.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 (** [] *)
 
 (* ================================================================= *)
@@ -524,9 +524,9 @@ Fixpoint evenb (n:nat) : bool :=
 Definition oddb (n:nat) : bool   :=   negb (evenb n).
 
 Example test_oddb1:    oddb 1 = true.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 Example test_oddb2:    oddb 4 = false.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 
 (** (You will notice if you step through these proofs that
     [simpl] actually has no effect on the goal -- all of the work is
@@ -573,7 +573,7 @@ Fixpoint mult (n m : nat) : nat :=
   end.
 
 Example test_mult1: (mult 3 3) = 9.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 
 (** You can match two expressions at once by putting a comma
     between them: *)
@@ -613,9 +613,9 @@ Fixpoint factorial (n:nat) : nat :=
   end.
 
 Example test_factorial1:          (factorial 3) = 6.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 Example test_factorial2:          (factorial 5) = (mult 10 12).
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 (** [] *)
 
 (** We can make numerical expressions a little easier to read and
@@ -678,11 +678,11 @@ Fixpoint leb (n m : nat) : bool :=
   end.
 
 Example test_leb1:             (leb 2 2) = true.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 Example test_leb2:             (leb 2 4) = true.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 Example test_leb3:             (leb 4 2) = false.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 
 (** **** Exercise: 1 star (blt_nat)  *)
 (** The [blt_nat] function tests [nat]ural numbers for [l]ess-[t]han,
@@ -693,11 +693,11 @@ Definition blt_nat (n m : nat) : bool :=
   (leb n m) && (negb (beq_nat n m)).
 
 Example test_blt_nat1:             (blt_nat 2 2) = false.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 Example test_blt_nat2:             (blt_nat 2 4) = true.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 Example test_blt_nat3:             (blt_nat 4 2) = false.
-Proof. simpl. reflexivity.  Qed.
+Proof. compute. reflexivity.  Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -720,7 +720,10 @@ Proof. simpl. reflexivity.  Qed.
 
 Theorem plus_O_n : forall n : nat, 0 + n = n.
 Proof.
-  intros n. simpl. reflexivity.  Qed.
+  intros n.
+  compute.
+  reflexivity.
+Qed.
 
 (** (You may notice that the above statement looks different in
     the [.v] file in your IDE than it does in the HTML rendition in
@@ -740,7 +743,7 @@ Proof.
 
 Theorem plus_O_n' : forall n : nat, 0 + n = n.
 Proof.
-  intros n. reflexivity. Qed.
+  intros n. compute. reflexivity. Qed.
 
 (** Moreover, it will be useful later to know that [reflexivity]
     does somewhat _more_ simplification than [simpl] does -- for
@@ -780,11 +783,14 @@ Proof.
 
 Theorem plus_1_l : forall n:nat, 1 + n = S n.
 Proof.
-  intros n. reflexivity.  Qed.
+  intros n.
+  compute.
+  reflexivity.
+Qed.
 
 Theorem mult_0_l : forall n:nat, 0 * n = 0.
 Proof.
-  intros n. reflexivity.  Qed.
+  intros n. lazy delta ["*"]. compute. reflexivity.  Qed.
 
 (** The [_l] suffix in the names of these theorems is
     pronounced "on the left." *)
@@ -848,12 +854,11 @@ Proof.
 Theorem plus_id_exercise : forall n m o : nat,
   n = m -> m = o -> n + m = m + o.
 Proof.
-  intros n m o.
-  intros H.
-  intros J.
-  rewrite -> H.
-  rewrite -> J.
-  reflexivity.  Qed.
+  intros n m o H J.
+  rewrite H.
+  rewrite J.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** The [Admitted] command tells Coq that we want to skip trying
@@ -877,8 +882,9 @@ Theorem mult_0_plus : forall n m : nat,
   (0 + n) * m = n * m.
 Proof.
   intros n m.
-  rewrite -> plus_O_n.
-  reflexivity.  Qed.
+  rewrite plus_O_n.
+  reflexivity.
+Qed.
 
 (** **** Exercise: 2 stars (mult_S_1)  *)
 Theorem mult_S_1 : forall n m : nat,
@@ -888,7 +894,7 @@ Proof.
   intros n m.
   intros H.
   simpl.
-  rewrite -> H.
+  rewrite H.
   reflexivity.
 Qed.
 
@@ -1061,7 +1067,7 @@ forall b c d,
   (b && c) && d = b && (c && d).
 Proof.
   intros b c d.
-destruct b.
+  destruct b.
   - destruct c.
     { destruct d.
       - reflexivity.
@@ -1093,8 +1099,8 @@ Theorem plus_1_neq_0' : forall n : nat,
   beq_nat (n + 1) 0 = false.
 Proof.
   intros [|n].
-  - reflexivity.
-  - reflexivity.  Qed.
+  - unfold "+". compute. reflexivity.
+  - unfold "+". compute. reflexivity.  Qed.
 
 (** If there are no arguments to name, we can just write [[]]. *)
 
@@ -1118,10 +1124,10 @@ forall b c : bool,
     c = true.
 Proof.
   intros [] [].
-  - reflexivity.
-  - simpl. intros H. rewrite -> H. reflexivity.
-  - reflexivity.
-  - simpl. intros H. rewrite -> H. reflexivity.
+  - compute. intros H. reflexivity.
+  - compute. intros ->. reflexivity.
+  - compute. intros H. reflexivity.
+  - compute. intros ->. reflexivity.
 Qed.
 (** [] *)
 
@@ -1229,7 +1235,7 @@ Theorem identity_fn_applied_twice :
   (forall (x : bool), f x = x) ->
   forall (b : bool), f (f b) = b.
 Proof.
-  intro f. intro H. intro b. destruct b as [|].
+  intros f H b. destruct b as [|].
   - rewrite -> H. rewrite -> H. reflexivity.
   - rewrite -> H. rewrite -> H. reflexivity.
 Qed.
@@ -1254,18 +1260,12 @@ Theorem andb_eq_orb :
 Proof.
   intros b c.
   destruct b.
-  - simpl.
-    destruct c.
-    + reflexivity.
-    + intro H.
-      rewrite -> H.
-      reflexivity.
-  - destruct c.
-    + simpl.
-      intro H.
-      rewrite -> H.
-      reflexivity.
-    + reflexivity.
+  - compute.
+    intros ->.
+    reflexivity.
+  - compute.
+    intro.
+    assumption.
 Qed.
 (** [] *)
 
