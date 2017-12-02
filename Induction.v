@@ -118,12 +118,10 @@ Proof.
 Theorem minus_diag : forall n,
   minus n n = 0.
 Proof.
-  (* WORKED IN CLASS *)
-  intros n. induction n as [| n' IHn'].
-  - (* n = 0 *)
-    simpl. reflexivity.
-  - (* n = S n' *)
-    simpl. rewrite -> IHn'. reflexivity.  Qed.
+  intros. induction n as [| n' IHn'].
+  - simpl. reflexivity.
+  - simpl. rewrite IHn'. reflexivity.
+Qed.
 
 (** (The use of the [intros] tactic in these proofs is actually
     redundant.  When applied to a goal that contains quantified
@@ -137,18 +135,41 @@ Proof.
 Theorem mult_0_r : forall n:nat,
   n * 0 = 0.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. induction n as [|n' IHn'].
+  - simpl. reflexivity.
+  - simpl. rewrite IHn'. reflexivity.
+Qed.
 
 Theorem plus_n_Sm : forall n m : nat,
   S (n + m) = n + (S m).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. induction n as [|n' IHn'].
+  - simpl. reflexivity.
+  - simpl. rewrite IHn'. reflexivity.
+Qed.
 
+Theorem plus_a_0 : forall a:nat,
+  a + 0 = a.
+Proof.
+  intros. induction a as [|a' IHa'].
+  - simpl. reflexivity.
+  - simpl. rewrite IHa'. reflexivity.
+Qed.
 
 Theorem plus_comm : forall n m : nat,
   n + m = m + n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  induction n as [|n' IHn'].
+  - simpl.
+    induction m as [|m' IHm'].
+    + simpl. reflexivity.
+    + simpl. rewrite <- IHm'. reflexivity.
+  - simpl.
+    rewrite IHn'.
+    rewrite plus_n_Sm.
+    reflexivity.
+Qed.
 
 Theorem plus_assoc : forall n m p : nat,
   n + (m + p) = (n + m) + p.
