@@ -254,17 +254,17 @@ Proof. simpl. reflexivity. Qed.
     should return [true] if either or both of its inputs are
     [false]. *)
 
-Definition nandb (b1:bool) (b2:bool) : bool
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition nandb (b1:bool) (b2:bool) : bool :=
+  (negb (andb b1 b2)).
 
 Example test_nandb1:               (nandb true false) = true.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_nandb2:               (nandb false false) = true.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_nandb3:               (nandb false true) = true.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_nandb4:               (nandb true true) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 (** [] *)
 
 (** **** Exercise: 1 star (andb3)  *)
@@ -272,17 +272,17 @@ Example test_nandb4:               (nandb true true) = false.
     return [true] when all of its inputs are [true], and [false]
     otherwise. *)
 
-Definition andb3 (b1:bool) (b2:bool) (b3:bool) : bool
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition andb3 (b1:bool) (b2:bool) (b3:bool) : bool :=
+  (b1 && b2 && b3).
 
 Example test_andb31:                 (andb3 true true true) = true.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_andb32:                 (andb3 false true true) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_andb33:                 (andb3 true false true) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_andb34:                 (andb3 true true false) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 (** [] *)
 
 (* ================================================================= *)
@@ -606,13 +606,16 @@ Fixpoint exp (base power : nat) : nat :=
 
     Translate this into Coq. *)
 
-Fixpoint factorial (n:nat) : nat
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Fixpoint factorial (n:nat) : nat :=
+  match n with
+    | 0 => 1
+    | S p => mult n (factorial p)
+  end.
 
 Example test_factorial1:          (factorial 3) = 6.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_factorial2:          (factorial 5) = (mult 10 12).
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 (** [] *)
 
 (** We can make numerical expressions a little easier to read and
@@ -686,15 +689,15 @@ Proof. simpl. reflexivity.  Qed.
     yielding a [b]oolean.  Instead of making up a new [Fixpoint] for
     this one, define it in terms of a previously defined function. *)
 
-Definition blt_nat (n m : nat) : bool
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition blt_nat (n m : nat) : bool :=
+  (leb n m) && (negb (beq_nat n m)).
 
 Example test_blt_nat1:             (blt_nat 2 2) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_blt_nat2:             (blt_nat 2 4) = true.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_blt_nat3:             (blt_nat 4 2) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -845,7 +848,12 @@ Proof.
 Theorem plus_id_exercise : forall n m o : nat,
   n = m -> m = o -> n + m = m + o.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m o.
+  intros H.
+  intros J.
+  rewrite -> H.
+  rewrite -> J.
+  reflexivity.  Qed.
 (** [] *)
 
 (** The [Admitted] command tells Coq that we want to skip trying
@@ -877,7 +885,12 @@ Theorem mult_S_1 : forall n m : nat,
   m = S n ->
   m * (1 + n) = m * m.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m.
+  intros H.
+  simpl.
+  rewrite -> H.
+  reflexivity.
+Qed.
 
   (* (N.b. This proof can actually be completed without using [rewrite],
      but please do use [rewrite] for the sake of the exercise.) *)
@@ -922,7 +935,8 @@ Theorem plus_1_neq_0 : forall n : nat,
 Proof.
   intros n. destruct n as [| n'].
   - reflexivity.
-  - reflexivity.   Qed.
+  - reflexivity.
+Qed.
 
 (** The [destruct] generates _two_ subgoals, which we must then
     prove, separately, in order to get Coq to accept the theorem. The
@@ -979,9 +993,11 @@ Proof.
 Theorem negb_involutive : forall b : bool,
   negb (negb b) = b.
 Proof.
-  intros b. destruct b.
+  intros b.
+  destruct b.
   - reflexivity.
-  - reflexivity.  Qed.
+  - reflexivity.
+Qed.
 
 (** Note that the [destruct] here has no [as] clause because
     none of the subcases of the [destruct] need to bind any variables,
@@ -998,9 +1014,12 @@ Proof.
     For example: *)
 
 
-Theorem andb_commutative : forall b c, andb b c = andb c b.
+Theorem andb_commutative :
+forall b c,
+  andb b c = andb c b.
 Proof.
-  intros b c. destruct b.
+  intros b c.
+  destruct b.
   - destruct c.
     + reflexivity.
     + reflexivity.
@@ -1020,13 +1039,16 @@ Qed.
 
 Theorem andb_commutative' : forall b c, andb b c = andb c b.
 Proof.
-  intros b c. destruct b.
+  intros b c.
+  destruct b.
   { destruct c.
-    { reflexivity. }
-    { reflexivity. } }
+    - reflexivity.
+    - reflexivity.
+  }
   { destruct c.
-    { reflexivity. }
-    { reflexivity. } }
+    - reflexivity.
+    - reflexivity.
+  }
 Qed.
 
 (** Since curly braces mark both the beginning and the end of a
@@ -1035,9 +1057,11 @@ Qed.
     same bullet shapes at multiple levels in a proof: *)
 
 Theorem andb3_exchange :
-  forall b c d, andb (andb b c) d = andb (andb b d) c.
+forall b c d,
+  (b && c) && d = b && (c && d).
 Proof.
-  intros b c d. destruct b.
+  intros b c d.
+destruct b.
   - destruct c.
     { destruct d.
       - reflexivity.
@@ -1054,7 +1078,7 @@ Proof.
       - reflexivity. }
 Qed.
 
-(** Before closing the chapter, let's mention one final convenience.  
+(** Before closing the chapter, let's mention one final convenience.
     As you may have noticed, many proofs perform case analysis on a variable 
     right after introducing it:
 
@@ -1088,17 +1112,28 @@ Qed.
 (** Prove the following claim, marking cases (and subcases) with
     bullets when you use [destruct]. *)
 
-Theorem andb_true_elim2 : forall b c : bool,
-  andb b c = true -> c = true.
+Theorem andb_true_elim2 :
+forall b c : bool,
+  andb b c = true ->
+    c = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros [] [].
+  - reflexivity.
+  - simpl. intros H. rewrite -> H. reflexivity.
+  - reflexivity.
+  - simpl. intros H. rewrite -> H. reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star (zero_nbeq_plus_1)  *)
-Theorem zero_nbeq_plus_1 : forall n : nat,
+Theorem zero_nbeq_plus_1 :
+forall n : nat,
   beq_nat 0 (n + 1) = false.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros [].
+  - reflexivity.
+  - reflexivity.
+Qed.
 (** [] *)
 
 (* ================================================================= *)
@@ -1194,7 +1229,10 @@ Theorem identity_fn_applied_twice :
   (forall (x : bool), f x = x) ->
   forall (b : bool), f (f b) = b.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intro f. intro H. intro b. destruct b as [|].
+  - rewrite -> H. rewrite -> H. reflexivity.
+  - rewrite -> H. rewrite -> H. reflexivity.
+Qed.
 
 (** Now state and prove a theorem [negation_fn_applied_twice] similar
     to the previous one but where the second hypothesis says that the
@@ -1211,11 +1249,24 @@ Proof.
 
 Theorem andb_eq_orb :
   forall (b c : bool),
-  (andb b c = orb b c) ->
+  b && c = b || c ->
   b = c.
 Proof.
-  (* FILL IN HERE *) Admitted.
-
+  intros b c.
+  destruct b.
+  - simpl.
+    destruct c.
+    + reflexivity.
+    + intro H.
+      rewrite -> H.
+      reflexivity.
+  - destruct c.
+    + simpl.
+      intro H.
+      rewrite -> H.
+      reflexivity.
+    + reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars (binary)  *)
@@ -1257,6 +1308,25 @@ Proof.
         first converting it to unary and then incrementing. *)
 
 (* FILL IN HERE *)
+
+Inductive bin : Type :=
+| O : bin
+| J : bin -> bin
+| JP : bin -> bin
+.
+
+Fixpoint incr (a : bin): bin :=match a with
+| O => JP O
+| J n => JP n
+| JP n => J (incr n)
+end.
+
+
+Example b0:  incr O = JP O. Proof. reflexivity.  Qed.
+Example b1:  incr (JP O) = J (JP O). Proof. simpl. reflexivity.  Qed.
+Example b2:  incr (J (JP O)) = JP (JP O). Proof. simpl. reflexivity.  Qed.
+Example b3:  incr (JP (JP O)) = J (J (JP O)). Proof. simpl. reflexivity.  Qed.
+Example b4:  incr (J (J (JP O))) = JP (J (JP O)). Proof. simpl. reflexivity.  Qed.
 (** [] *)
 
 (** $Date: 2017-09-05 11:51:58 -0400 (Tue, 05 Sep 2017) $ *)
