@@ -1310,23 +1310,23 @@ Qed.
 (* FILL IN HERE *)
 
 Inductive bin : Type :=
-| O : bin
+| Z : bin
 | J : bin -> bin
 | JP : bin -> bin
 .
 
 Fixpoint incr (a : bin): bin :=match a with
-| O => JP O
+| Z => JP Z
 | J n => JP n
 | JP n => J (incr n)
 end.
 
 
-Example b0:  incr O = JP O. Proof. reflexivity.  Qed.
-Example b1:  incr (JP O) = J (JP O). Proof. simpl. reflexivity.  Qed.
-Example b2:  incr (J (JP O)) = JP (JP O). Proof. simpl. reflexivity.  Qed.
-Example b3:  incr (JP (JP O)) = J (J (JP O)). Proof. simpl. reflexivity.  Qed.
-Example b4:  incr (J (J (JP O))) = JP (J (JP O)). Proof. simpl. reflexivity.  Qed.
+Example b0:  incr Z = JP Z. Proof. reflexivity.  Qed.
+Example b1:  incr (JP Z) = J (JP Z). Proof. simpl. reflexivity.  Qed.
+Example b2:  incr (J (JP Z)) = JP (JP Z). Proof. simpl. reflexivity.  Qed.
+Example b3:  incr (JP (JP Z)) = J (J (JP Z)). Proof. simpl. reflexivity.  Qed.
+Example b4:  incr (J (J (JP Z))) = JP (J (JP Z)). Proof. simpl. reflexivity.  Qed.
 (** [] *)
 
 (** $Date: 2017-09-05 11:51:58 -0400 (Tue, 05 Sep 2017) $ *)
