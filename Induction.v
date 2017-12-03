@@ -171,10 +171,22 @@ Proof.
     reflexivity.
 Qed.
 
+Theorem plus_n_s_1 : forall n: nat,
+  n + 1 = (S n).
+Proof.
+  intros. induction n as [|n IHn].
+  { simpl. reflexivity. }
+  { simpl. rewrite IHn. reflexivity. }
+Qed.
+
 Theorem plus_assoc : forall n m p : nat,
   n + (m + p) = (n + m) + p.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. simpl.
+  induction n as [|n IHn].
+  { simpl. reflexivity. }
+  { simpl. rewrite IHn. reflexivity. }
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars (double_plus)  *)
@@ -190,7 +202,11 @@ Fixpoint double (n:nat) :=
 
 Lemma double_plus : forall n, double n = n + n .
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. simpl.
+  induction n as [|n IHn].
+  { simpl. reflexivity. }
+  { simpl. rewrite <- plus_n_Sm. rewrite IHn. reflexivity. }
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, optional (evenb_S)  *)
@@ -204,7 +220,11 @@ Proof.
 Theorem evenb_S : forall n : nat,
   evenb (S n) = negb (evenb n).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. simpl.
+  induction n as [|n IHn].
+  { simpl. reflexivity. }
+  { simpl. rewrite IHn. rewrite negb_involutive. reflexivity. }
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star (destruct_induction)  *)
@@ -431,10 +451,31 @@ Proof.
 (** Use [assert] to help prove this theorem.  You shouldn't need to
     use induction on [plus_swap]. *)
 
+Theorem plus_n_0 : forall n: nat,
+  n + 0 = n.
+Proof.
+  intros. simpl.
+  induction n as [|n IHn].
+  { simpl. reflexivity. }
+  { simpl. rewrite IHn. reflexivity. }
+Qed.
+
 Theorem plus_swap : forall n m p : nat,
   n + (m + p) = m + (n + p).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  rewrite plus_comm.
+
+  assert (H: p + n = n + p).
+  { rewrite -> plus_comm. reflexivity. }
+  rewrite <- H.
+
+  assert (I: m + (p + n) = m + p + n).
+  { rewrite -> plus_assoc. reflexivity. }
+  rewrite I.
+
+  reflexivity.
+Qed.
 
 (** Now prove commutativity of multiplication.  (You will probably
     need to define and prove a separate subsidiary theorem to be used
@@ -461,7 +502,10 @@ Check leb.
 Theorem leb_refl : forall n:nat,
   true = leb n n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. induction n as [|n H].
+  { simpl. reflexivity. }
+  { simpl. rewrite H. reflexivity. }
+Qed.
 
 Theorem zero_nbeq_S : forall n:nat,
   beq_nat 0 (S n) = false.
