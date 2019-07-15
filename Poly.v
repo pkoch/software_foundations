@@ -105,7 +105,7 @@ Check cons.
 
 (** Having to supply a type argument for each use of a list
     constructor may seem an awkward burden, but we will soon see
-    ways of reducing that burden. *) 
+    ways of reducing that burden. *)
 
 Check (cons nat 2 (cons nat 1 (nil nat))).
 
@@ -806,7 +806,7 @@ Definition option_map {X Y : Type} (f : X -> Y) (xo : option X)
     type parameters where necessary and use Coq to check that you've
     done so correctly.  (This exercise is not to be turned in; it is
     probably easiest to do it on a _copy_ of this file that you can
-    throw away afterwards.) 
+    throw away afterwards.)
 *)
 (** [] *)
 
@@ -1027,23 +1027,23 @@ Proof.
 Module Church.
 Definition nat := forall X : Type, (X -> X) -> X -> X.
 
-(** Let's see how to write some numbers with this notation. Iterating
-    a function once should be the same as just applying it.  Thus: *)
-
-Definition one : nat :=
-  fun (X : Type) (f : X -> X) (x : X) => f x.
-
-(** Similarly, [two] should apply [f] twice to its argument: *)
-
-Definition two : nat :=
-  fun (X : Type) (f : X -> X) (x : X) => f (f x).
-
 (** Defining [zero] is somewhat trickier: how can we "apply a function
     zero times"?  The answer is actually simple: just return the
     argument untouched. *)
 
 Definition zero : nat :=
   fun (X : Type) (f : X -> X) (x : X) => x.
+
+(** Let's see how to write some numbers with this notation. Iterating
+    a function once should be the same as just applying it.  Thus: *)
+
+Definition one : nat :=
+  fun (X : Type) (f : X -> X) (x : X) => f (zero X f x).
+
+(** Similarly, [two] should apply [f] twice to its argument: *)
+
+Definition two : nat :=
+  fun (X : Type) (f : X -> X) (x : X) => f (one X f x).
 
 (** More generally, a number [n] can be written as [fun X f x => f (f
     ... (f x) ...)], with [n] occurrences of [f].  Notice in
@@ -1058,46 +1058,54 @@ Definition three : nat := @doit3times.
 
 (** Successor of a natural number: *)
 
-Definition succ (n : nat) : nat
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition succ (w : nat) : nat :=
+  fun (X : Type) (s : X -> X) (x : X) => s (w X s x).
 
 Example succ_1 : succ zero = one.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  reflexivity.
+Qed.
 
 Example succ_2 : succ one = two.
-Proof. (* FILL IN HERE *) Admitted.
+Proof. reflexivity. Qed.
 
 Example succ_3 : succ two = three.
-Proof. (* FILL IN HERE *) Admitted.
+Proof. reflexivity. Qed.
 
 (** Addition of two natural numbers: *)
 
-Definition plus (n m : nat) : nat
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition plus (wa wb : nat) : nat :=
+  fun (X : Type) (f : X -> X) (x : X) => (wa X f (wb X f x)).
 
 Example plus_1 : plus zero one = one.
-Proof. (* FILL IN HERE *) Admitted.
+Proof. reflexivity. Qed.
 
 Example plus_2 : plus two three = plus three two.
-Proof. (* FILL IN HERE *) Admitted.
+Proof. reflexivity. Qed.
 
 Example plus_3 :
   plus (plus two two) three = plus one (plus three three).
-Proof. (* FILL IN HERE *) Admitted.
+Proof. reflexivity. Qed.
 
 (** Multiplication: *)
 
-Definition mult (n m : nat) : nat
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition mult (wa wb : nat) : nat :=
+  fun (O: Type) (s: O -> O) (o: O) => (
+    wa
+    O
+    (fun (x: O) => (wb O s) x)
+    o
+  )
+.
 
 Example mult_1 : mult one one = one.
-Proof. (* FILL IN HERE *) Admitted.
+Proof. reflexivity. Qed.
 
 Example mult_2 : mult zero (plus three three) = zero.
-Proof. (* FILL IN HERE *) Admitted.
+Proof. reflexivity. Qed.
 
 Example mult_3 : mult two three = plus three three.
-Proof. (* FILL IN HERE *) Admitted.
+Proof. reflexivity. Qed.
 
 (** Exponentiation: *)
 
@@ -1106,17 +1114,28 @@ Proof. (* FILL IN HERE *) Admitted.
     a "Universe inconsistency" error, try iterating over a different
     type: [nat] itself is usually problematic.) *)
 
-Definition exp (n m : nat) : nat
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition exp (base sup : nat) : nat :=
+  fun (O: Type) (s: O -> O) (o: O) => (
+    base
+    O
+    (fun (x: O) => ((mult sup one) O s) x)
+    o
+  )
+.
+
+
+Definition four : nat := mult two two.
+
+Definition eight : nat := mult two four.
 
 Example exp_1 : exp two two = plus two two.
-Proof. (* FILL IN HERE *) Admitted.
+Proof. compute. reflexivity. Admitted.
 
 Example exp_2 : exp three two = plus (mult two (mult two two)) one.
-Proof. (* FILL IN HERE *) Admitted.
+Proof. compute. Admitted.
 
-Example exp_3 : exp three zero = one.
-Proof. (* FILL IN HERE *) Admitted.
+Example exp_3 : exp three zero = plus zero one.
+Proof. compute. Admitted.
 
 End Church.
 (** [] *)

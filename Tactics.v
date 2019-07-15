@@ -143,7 +143,7 @@ Proof.
 Theorem trans_eq : forall (X:Type) (n m o : X),
   n = m -> m = o -> n = o.
 Proof.
-  intros X n m o eq1 eq2. rewrite -> eq1. rewrite -> eq2.
+  intros X n m o eq1 eq2. rewrite eq1, eq2.
   reflexivity.  Qed.
 
 (** Now, we should be able to use [trans_eq] to prove the above
@@ -178,7 +178,8 @@ Example trans_eq_exercise : forall (n m o p : nat),
      (n + p) = m ->
      (n + p) = (minustwo o).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. rewrite H0. assumption.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -219,7 +220,7 @@ Theorem S_injective : forall (n m : nat),
   S n = S m ->
   n = m.
 Proof.
-  intros n m H.
+  intros.
 
 (** By writing [inversion H] at this point, we are asking Coq to
     generate all equations that it can infer from [H] as additional
@@ -238,7 +239,7 @@ Theorem inversion_ex1 : forall (n m o : nat),
   [n; m] = [o; o] ->
   [n] = [m].
 Proof.
-  intros n m o H. inversion H. reflexivity. Qed.
+  intros. inversion H. reflexivity. Qed.
 
 (** We can name the equations that [inversion] generates with an
     [as ...] clause: *)
@@ -247,7 +248,7 @@ Theorem inversion_ex2 : forall (n m : nat),
   [n] = [m] ->
   n = m.
 Proof.
-  intros n m H. inversion H as [Hnm]. reflexivity.  Qed.
+  intros. inversion H. reflexivity.  Qed.
 
 (** **** Exercise: 1 star (inversion_ex3)  *)
 Example inversion_ex3 : forall (X : Type) (x y z : X) (l j : list X),
@@ -255,7 +256,7 @@ Example inversion_ex3 : forall (X : Type) (x y z : X) (l j : list X),
   y :: l = x :: j ->
   x = y.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. inversion H. inversion H0. rewrite H2. reflexivity.  Qed.
 (** [] *)
 
 (** When used on a hypothesis involving an equality between
@@ -297,7 +298,7 @@ Theorem inversion_ex4 : forall (n : nat),
   S n = O ->
   2 + 2 = 5.
 Proof.
-  intros n contra. inversion contra. Qed.
+  intros. inversion H. Qed.
 
 Theorem inversion_ex5 : forall (n m : nat),
   false = true ->
@@ -319,7 +320,8 @@ Example inversion_ex6 : forall (X : Type)
   y :: l = z :: j ->
   x = z.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. inversion H.
+Qed.
 (** [] *)
 
 (** To summarize this discussion, suppose [H] is a hypothesis in the
@@ -348,7 +350,7 @@ Proof.
 
 Theorem f_equal : forall (A B : Type) (f: A -> B) (x y: A),
   x = y -> f x = f y.
-Proof. intros A B f x y eq. rewrite eq.  reflexivity.  Qed.
+Proof. intros. rewrite H.  reflexivity.  Qed.
 
 (* ################################################################# *)
 (** * Using Tactics on Hypotheses *)
@@ -409,8 +411,11 @@ Theorem plus_n_n_injective : forall n m,
      n + n = m + m ->
      n = m.
 Proof.
-  intros n. induction n as [| n'].
-    (* FILL IN HERE *) Admitted.
+  intros. induction n as [| n].
+  - inversion H. rewrite H1. induction m as [| m].
+    + reflexivity.
+    + simpl. 
+Qed.
 (** [] *)
 
 (* ################################################################# *)
